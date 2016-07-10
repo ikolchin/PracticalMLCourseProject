@@ -171,7 +171,7 @@ rf</code></pre>
 ## Mtry:                             7 
 ## Target node size:                 1 
 ## Variable importance mode:         none 
-## OOB prediction error:             0.45 %</code></pre>
+## OOB prediction error:             0.49 %</code></pre>
 <p>Predictive quality of the model is then checked on the test set.</p>
 <pre class="r"><code>predictions &lt;- predict(rf, test.data)
 confusionMatrix(predictions$predictions, test.data$classe)</code></pre>
@@ -179,33 +179,33 @@ confusionMatrix(predictions$predictions, test.data$classe)</code></pre>
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 2790    5    0    0    0
-##          B    0 1893    8    0    0
-##          C    0    0 1703   28    0
-##          D    0    0    0 1578    3
-##          E    0    0    0    2 1800
+##          A 2790    2    0    0    0
+##          B    0 1890   10    0    0
+##          C    0    6 1701   19    0
+##          D    0    0    0 1589    7
+##          E    0    0    0    0 1796
 ## 
 ## Overall Statistics
-##                                           
-##                Accuracy : 0.9953          
-##                  95% CI : (0.9938, 0.9966)
-##     No Information Rate : 0.2844          
-##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
-##                                           
-##                   Kappa : 0.9941          
-##  Mcnemar's Test P-Value : NA              
+##                                          
+##                Accuracy : 0.9955         
+##                  95% CI : (0.994, 0.9967)
+##     No Information Rate : 0.2844         
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16      
+##                                          
+##                   Kappa : 0.9943         
+##  Mcnemar's Test P-Value : NA             
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            1.0000   0.9974   0.9953   0.9813   0.9983
-## Specificity            0.9993   0.9990   0.9965   0.9996   0.9998
-## Pos Pred Value         0.9982   0.9958   0.9838   0.9981   0.9989
-## Neg Pred Value         1.0000   0.9994   0.9990   0.9964   0.9996
+## Sensitivity            1.0000   0.9958   0.9942   0.9882   0.9961
+## Specificity            0.9997   0.9987   0.9969   0.9991   1.0000
+## Pos Pred Value         0.9993   0.9947   0.9855   0.9956   1.0000
+## Neg Pred Value         1.0000   0.9990   0.9988   0.9977   0.9991
 ## Prevalence             0.2844   0.1935   0.1744   0.1639   0.1838
-## Detection Rate         0.2844   0.1930   0.1736   0.1609   0.1835
-## Detection Prevalence   0.2849   0.1938   0.1765   0.1612   0.1837
-## Balanced Accuracy      0.9996   0.9982   0.9959   0.9905   0.9990</code></pre>
+## Detection Rate         0.2844   0.1927   0.1734   0.1620   0.1831
+## Detection Prevalence   0.2846   0.1937   0.1759   0.1627   0.1831
+## Balanced Accuracy      0.9999   0.9973   0.9955   0.9937   0.9981</code></pre>
 <p>Accuracy higher than 99% is obtained. As a final step, predictions for the initial test set are generated.</p>
 <pre class="r"><code>predictions &lt;- predict(rf, test.final.data)
 predictions$predictions</code></pre>
