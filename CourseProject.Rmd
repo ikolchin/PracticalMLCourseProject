@@ -1,0 +1,61 @@
+---
+title: "Classifying Barbell Lifts Using Accelerometers Data"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Data Preparation
+Training and test data is loaded from online storage.
+```{r}
+train.url <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+train.data <- read.csv(url(train.url), na.strings=c("NA", "#DIV/0!", ""))
+test.url <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+test.final.data <- read.csv(url(test.url), na.strings=c("NA", "#DIV/0!", ""))
+```
+Training data is further subdivided into training and test subsets used respectively to train and evaluate machine learning model before making predictions for the (small) final test set.
+```{r, warning=FALSE}
+library(caret)
+
+train.idx <- createDataPartition(y=train.data$classe, p=0.5, list=FALSE)
+test.data <- train.data[-train.idx, ]
+train.data <- train.data[train.idx, ]
+dim(train.data); dim(test.data); dim(test.final.data)
+```
+Irrelevant columns (e.g. those containing id, username, timestamps) are then removed. So are columns containing missing values.
+```{r}
+train.data <- train.data[, 7:160]
+test.data <- test.data[, 7:160]
+test.final.data <- test.final.data[, 7:160]
+NA.cols <- apply(is.na(train.data), 2, any)
+train.data <- train.data[!NA.cols]
+test.data <- test.data[!NA.cols]
+test.final.data <- test.final.data[!NA.cols]
+dim(train.data); dim(test.data); dim(test.final.data)
+```
+
+##Employing Machine Learning for Prediction
+Due to the large number of features decision trees look suitable for classification task. A random forest model is fit on the training set. Fast random forest implementation in the ranger package is employed.
+```{r, warning=FALSE}
+library(ranger)
+
+rf <- ranger(data=train.data,
+             dependent.variable.name="classe",
+             write.forest=TRUE)
+rf
+```
+Predictive quality of the model is then checked on the test set.
+```{r}
+predictions <- predict(rf, test.data)
+confusionMatrix(predictions$predictions, test.data$classe)
+```
+Accuracy higher than 99% is obtained. As a final step, predictions for the initial test set are generated.
+```{r}
+predictions <- predict(rf, test.final.data)
+predictions$predictions
+```
+
+##Conclusion
+The analysis shows that the features in the dataset allow for very high classification quality. Indeed, using only around one third of the total number of features (those not containing missing values) and fitting random forest with default parameters results in accuracy higher than 99%. As a side note, ranger implementation of random forest seems to be significantly faster than that in caret package.
